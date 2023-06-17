@@ -1,0 +1,6 @@
+{
+  "*.ts": ["eslint --ext .ts,.tsx --fix", "prettier --write --config .prettierrc"],
+  "*.{js,jsx,ts,tsx,css,json,md}": ["prettier --write --config .prettierrc"]
+}
+
+
