@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, keyframes } from '@mui/system';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import MuiAccordionSummary, {
@@ -7,6 +7,15 @@ import MuiAccordionSummary, {
 } from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
+
+const expandAnimation = keyframes`
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+`;
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -21,6 +30,16 @@ const Accordion = styled((props: AccordionProps) => (
   '& .Accordion-root': {
     boarder: 'None',
   },
+}));
+
+const ProgressBar = styled('div')(({ theme }) => ({
+  top: '0',
+  left: '0',
+  width: `${({ expanded }) => (expanded ? '100%' : '0%')}`,
+  height: '1px',
+  backgroundColor: '#000000',
+  animation: `${({ expanded }) =>
+    expanded ? `${expandAnimation} 8s linear` : 'none'}`,
 }));
 
 const AccordionSummary = styled((props: AccordionSummaryProps) => (
@@ -58,13 +77,32 @@ const AccodionHeader = styled(Typography)(({ theme }) => ({
   margin: '0px',
 }));
 export default function CustomizedAccordion() {
-  const [expanded, setExpanded] = React.useState<string | false>('panel1');
-
+  const [expanded, setExpanded] = React.useState('');
+  const listOfAccordions = ['panel1', 'panel2', 'panel3', 'panel4'];
+  let panel = 0;
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setExpanded(newExpanded ? panel : false);
     };
 
+  const autoExpand = () => {
+    setExpanded(listOfAccordions[panel]);
+    if (panel == 3) {
+      panel = 0;
+      setExpanded(listOfAccordions[panel]);
+    }
+    panel += 1;
+  };
+
+  React.useEffect(() => {
+    const intervalId = setInterval(() => {
+      autoExpand();
+    }, 8000); // execute every 1 second
+
+    return () => {
+      clearInterval(intervalId); // cleanup the interval when the component unmounts
+    };
+  }, []);
   return (
     <div>
       <Accordion
@@ -72,6 +110,7 @@ export default function CustomizedAccordion() {
         onChange={handleChange('panel1')}
       >
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+          {expanded === 'panel1' && <ProgressBar />}
           <AccodionHeader>Expense Tracking</AccodionHeader>
         </AccordionSummary>
         <AccordionDetails>
