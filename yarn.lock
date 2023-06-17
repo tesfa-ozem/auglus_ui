@@ -335,7 +335,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/react@npm:^11.11.1":
+"@emotion/react@npm:latest":
   version: 11.11.1
   resolution: "@emotion/react@npm:11.11.1"
   dependencies:
@@ -376,7 +376,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/styled@npm:^11.11.0":
+"@emotion/styled@npm:latest":
   version: 11.11.0
   resolution: "@emotion/styled@npm:11.11.0"
   dependencies:
@@ -754,6 +754,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mui/icons-material@npm:^5.11.16":
+  version: 5.11.16
+  resolution: "@mui/icons-material@npm:5.11.16"
+  dependencies:
+    "@babel/runtime": ^7.21.0
+  peerDependencies:
+    "@mui/material": ^5.0.0
+    "@types/react": ^17.0.0 || ^18.0.0
+    react: ^17.0.0 || ^18.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: db70426b6ede049307b951fc622c6ab3b156a24589242bebbc7effd4b0df2d3c7aca93796ed8dfdf20776248778a798724c7a112f8f687c3b4a1ae813f98fb17
+  languageName: node
+  linkType: hard
+
 "@mui/material@npm:^5.13.5":
   version: 5.13.5
   resolution: "@mui/material@npm:5.13.5"
@@ -825,7 +841,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/system@npm:^5.13.5":
+"@mui/system@npm:^5.13.5, @mui/system@npm:latest":
   version: 5.13.5
   resolution: "@mui/system@npm:5.13.5"
   dependencies:
@@ -2536,11 +2552,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "expense_traker_ui@workspace:."
   dependencies:
-    "@emotion/react": ^11.11.1
-    "@emotion/styled": ^11.11.0
+    "@emotion/react": latest
+    "@emotion/styled": latest
     "@fontsource/montserrat-alternates": ^5.0.3
     "@fontsource/roboto": ^5.0.3
+    "@mui/icons-material": ^5.11.16
     "@mui/material": ^5.13.5
+    "@mui/system": latest
     "@types/react": ^18.0.37
     "@types/react-dom": ^18.0.11
     "@typescript-eslint/eslint-plugin": ^5.50.0
