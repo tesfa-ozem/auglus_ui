@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Box,
   Container,
@@ -142,7 +141,7 @@ const FeatureImage = styled('img')(({ theme }) => ({
 
 const LandingPage = () => {
   const pages = [
-    'Why Harvest?',
+    'Why ExpenseWise?',
     ' Features',
     'Customers',
     ' Integrations',
@@ -236,15 +235,17 @@ const LandingPage = () => {
                 <BootstrapInput defaultValue="Email" id="bootstrap-input" />
               </Grid>
               <Grid xs={3}>
-                <Button
-                  variant="contained"
-                  sx={{
-                    borderRadius: '16px',
-                    height: '50px',
-                  }}
-                >
-                  Get Started
-                </Button>
+                <NavLink href={'/login'}>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      borderRadius: '16px',
+                      height: '50px',
+                    }}
+                  >
+                    Get Started
+                  </Button>
+                </NavLink>
               </Grid>
             </Grid>
             <Grid xs={12} container sx={{ boder: '' }}>
@@ -279,8 +280,8 @@ const LandingPage = () => {
                   }}
                   align="center"
                 >
-                  Harvest makes it easy to track time, automate invoicing and
-                  reporting, and get the insights you need.
+                  ExpenseWise makes it easy to track time, automate invoicing
+                  and reporting, and get the insights you need.
                 </Typography>
               </Grid>
             </Grid>
