@@ -5,6 +5,18 @@ __metadata:
   version: 5
   cacheKey: 8
 
+"@0no-co/graphql.web@npm:^1.0.1":
+  version: 1.0.4
+  resolution: "@0no-co/graphql.web@npm:1.0.4"
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  peerDependenciesMeta:
+    graphql:
+      optional: true
+  checksum: d415fb2f063a024e2d382e8dc5e66929d0d9bf94f2c22e03cde201dc2fa03e15d21274dbe5c23a26ce016a4cac3db93ad99fb454de76fd94bc1600fd7062eebe
+  languageName: node
+  linkType: hard
+
 "@ampproject/remapping@npm:^2.2.0":
   version: 2.2.1
   resolution: "@ampproject/remapping@npm:2.2.1"
@@ -1227,6 +1239,26 @@ __metadata:
     "@typescript-eslint/types": 5.59.11
     eslint-visitor-keys: ^3.3.0
   checksum: 4894ec4b2b8da773b1f44398c836fcacb7f5a0c81f9404ecd193920e88d618091a7328659e0aa24697edda10479534db30bec7c8b0ba9fa0fce43f78222d5619
+  languageName: node
+  linkType: hard
+
+"@urql/core@npm:>=4.0.0, @urql/core@npm:^4.0.0":
+  version: 4.0.11
+  resolution: "@urql/core@npm:4.0.11"
+  dependencies:
+    "@0no-co/graphql.web": ^1.0.1
+    wonka: ^6.3.2
+  checksum: 69af84e56f33a08f6b107d410c71f9a2ace798c3fa4fcb2a8bc5fd2659da1ac5fe40303e37182dba6157022d65e5e945511dc8184f35f1502d460da37f880a02
+  languageName: node
+  linkType: hard
+
+"@urql/exchange-auth@npm:^2.1.5":
+  version: 2.1.5
+  resolution: "@urql/exchange-auth@npm:2.1.5"
+  dependencies:
+    "@urql/core": ">=4.0.0"
+    wonka: ^6.3.2
+  checksum: 20933f83927db30ee48be578702809565461cb54d567083013f99c715e41ba9b757632aa7f9bc77bca7863f2d3f6fb09257a2b77d108082a5106ee968b7ba4f8
   languageName: node
   linkType: hard
 
@@ -2563,6 +2595,7 @@ __metadata:
     "@types/react-dom": ^18.0.11
     "@typescript-eslint/eslint-plugin": ^5.50.0
     "@typescript-eslint/parser": ^5.59.0
+    "@urql/exchange-auth": ^2.1.5
     "@vitejs/plugin-react": ^4.0.0
     eslint: ^8.0.1
     eslint-config-standard-with-typescript: latest
@@ -2577,9 +2610,11 @@ __metadata:
     prettier: ^2.8.8
     react: ^18.2.0
     react-dom: ^18.2.0
+    react-hook-form: ^7.45.1
     react-router-dom: ^6.13.0
     recharts: ^2.7.1
     typescript: "*"
+    urql: ^4.0.4
     vite: ^4.3.9
   languageName: unknown
   linkType: soft
@@ -4213,6 +4248,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-hook-form@npm:^7.45.1":
+  version: 7.45.1
+  resolution: "react-hook-form@npm:7.45.1"
+  peerDependencies:
+    react: ^16.8.0 || ^17 || ^18
+  checksum: 3abe1dcf449a3d438b4e5403d93d1502f6dab05afd5c5215f0fc88a32f3d06e7f4b77bee75479359c22a418af6ea0f52711478c73773cb5fd0f43da50669aa17
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.10.2, react-is@npm:^16.13.1, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -5088,6 +5132,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"urql@npm:^4.0.4":
+  version: 4.0.4
+  resolution: "urql@npm:4.0.4"
+  dependencies:
+    "@urql/core": ^4.0.0
+    wonka: ^6.3.2
+  peerDependencies:
+    react: ">= 16.8.0"
+  checksum: 3fca8c38cb0ec87ec90e0c9ae0d7b237cf01917bfb62631839a990c75a349ba6aba9f2851f32c2958c4120b222dd46e42784ebbd125f4432a99ec806fabd061c
+  languageName: node
+  linkType: hard
+
 "util-deprecate@npm:^1.0.1":
   version: 1.0.2
   resolution: "util-deprecate@npm:1.0.2"
@@ -5198,6 +5254,13 @@ __metadata:
   dependencies:
     string-width: ^1.0.2 || 2 || 3 || 4
   checksum: d5fc37cd561f9daee3c80e03b92ed3e84d80dde3365a8767263d03dacfc8fa06b065ffe1df00d8c2a09f731482fcacae745abfbb478d4af36d0a891fad4834d3
+  languageName: node
+  linkType: hard
+
+"wonka@npm:^6.3.2":
+  version: 6.3.2
+  resolution: "wonka@npm:6.3.2"
+  checksum: e161f377a4ea17cc2b19fe8820219a9e3e2c78db5df08b820525bc2cc261184823d1bc33bd2385e632656a9676c9de6ff614b6324c441dd5fc5faa253433d032
   languageName: node
   linkType: hard
 
