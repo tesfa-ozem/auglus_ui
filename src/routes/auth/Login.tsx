@@ -1,43 +1,42 @@
-import React, { useState } from 'react';
 import { Box, Container, TextField, Typography, Button } from '@mui/material';
 import { styled } from '@mui/system';
-import { gql, useMutation } from 'urql';
+import { useMutation } from 'urql';
 import { useForm, SubmitHandler } from 'react-hook-form';
-
-const Login = `
-mutation($email: String!, $password: String!){
-    login(email: $email, password: $password) {
-        ... on LoginSuccess {
-            accessToken
-            refreshToken
-        }
-        ... on LoginError {
-            message
-        }
-    }
-}
-`;
+import { LOGIN } from '../../gql/mutations';
+import { useNavigate } from 'react-router-dom';
 
 type Inputs = {
   email: string;
   password: string;
 };
 const LoginPage = () => {
-  const [updateLoginResult, updateLogin] = useMutation(Login);
+  const navigate = useNavigate();
+  const [result, updateLogin] = useMutation(LOGIN);
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    const variables = { email: data.email, password: data.password };
-    updateLogin(variables).then((result) => {
-      if (result.error) {
-        console.error('Oh no!', result.error);
-      }
-    });
+  const onSubmit: SubmitHandler<Inputs> = async (
+    d: Inputs,
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    const variables = { email: d.email, password: d.password };
+    const { data, error } = await updateLogin(variables);
+    if (error != undefined) {
+      console.error('Oh no!', error.message);
+    } else {
+      await localStorage.setItem('access_token', data.login.accessToken);
+      await localStorage.setItem('refresh_token', data.login.refreshToken);
+      navigate('/dashboard', {
+        state: {
+          title: 'Dashboard',
+          url: '/dashboard',
+        },
+      });
+    }
+    event.preventDefault();
     // Handle form submission logic
   };
 
