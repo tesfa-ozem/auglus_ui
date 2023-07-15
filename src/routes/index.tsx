@@ -1,21 +1,29 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { lazy } from 'react';
 import BaseLayout from '../layout/BaseLayout';
+import AppLayout from '../layout/AppLayout';
 
 const Landing = lazy(() => import('./landing/Landing'));
 const LoginPage = lazy(() => import('./auth/Login'));
 const DashboardPage = lazy(() => import('./dashboard/Dashboard'));
+import ErrorPage from './error-page';
 
 export const router = createBrowserRouter([
   {
     path: '',
     element: <BaseLayout />,
-    // errorElement: <RootError />,
+    errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <Navigate to="/landing" replace /> },
+      { index: true, element: <Navigate to="/landing" /> },
       { path: 'landing', element: <Landing /> },
       { path: 'login', element: <LoginPage /> },
     ],
+  },
+  {
+    path: '',
+    element: <AppLayout />,
+    errorElement: <ErrorPage />,
+    children: [{ path: 'dashboard', element: <DashboardPage /> }],
   },
 ]);
 

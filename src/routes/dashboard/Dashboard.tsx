@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Container, Typography, Grid } from '@mui/material';
 import { styled } from '@mui/system';
 import {
@@ -10,16 +9,23 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { useQuery } from 'urql';
+import { EXPENSE_TOTALS } from '../../gql/queries';
 
-import data from '../../../normal_tx.json';
+const ExpenseCard = styled('div')(() => ({
+  backgroundColor: 'white',
+  padding: '1.5rem',
+  borderRadius: '8px',
+}));
 
 const DashboardPage = () => {
-  const ExpenseCard = styled('div')(() => ({
-    backgroundColor: 'white',
-    padding: '1.5rem',
-    borderRadius: '8px',
-  }));
+  const [result, reexecuteQuery] = useQuery({
+    query: EXPENSE_TOTALS,
+  });
 
+  const { data, fetching, error } = result;
+  if (fetching) return <p>Loading...</p>;
+  if (error) return <p>Oh no... {error.message}</p>;
   return (
     <Box
       sx={{
@@ -41,12 +47,21 @@ const DashboardPage = () => {
                 Monthly Expense Trends
               </Typography>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={data}>
-                  <XAxis dataKey="year" />
+                <LineChart data={data.expenseTotals.data}>
+                  <XAxis dataKey="Id" />
                   <YAxis />
                   <CartesianGrid strokeDasharray="3 3" />
                   <Tooltip />
-                  <Line type="monotone" dataKey="paid_in" stroke="#8884d8" />
+                  <Line
+                    type="monotone"
+                    dataKey="totalPaidIn"
+                    stroke="#8884d8"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="totalPaidOut"
+                    stroke="#82ca9d"
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </ExpenseCard>
