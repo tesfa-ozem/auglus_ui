@@ -9,7 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { useQuery } from 'urql';
+import { useQuery } from '@apollo/client';
 import { EXPENSE_TOTALS } from '../../gql/queries';
 
 const ExpenseCard = styled('div')(() => ({
@@ -19,12 +19,9 @@ const ExpenseCard = styled('div')(() => ({
 }));
 
 const DashboardPage = () => {
-  const [result, reexecuteQuery] = useQuery({
-    query: EXPENSE_TOTALS,
-  });
+  const { loading, error, data } = useQuery(EXPENSE_TOTALS);
 
-  const { data, fetching, error } = result;
-  if (fetching) return <p>Loading...</p>;
+  if (loading) return <p>Loading...</p>;
   if (error) return <p>Oh no... {error.message}</p>;
   return (
     <Box

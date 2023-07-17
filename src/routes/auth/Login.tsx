@@ -1,6 +1,6 @@
 import { Box, Container, TextField, Typography, Button } from '@mui/material';
 import { styled } from '@mui/system';
-import { useMutation } from 'urql';
+import { useMutation } from '@apollo/client';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { LOGIN } from '../../gql/mutations';
 import { useNavigate } from 'react-router-dom';
@@ -11,24 +11,29 @@ type Inputs = {
 };
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [result, updateLogin] = useMutation(LOGIN);
+  const [updateLogin, { data, loading, error }] = useMutation(LOGIN);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = async (
+  const onSubmit = async (
     d: Inputs,
     event: React.FormEvent<HTMLFormElement>
   ) => {
+    debugger;
     const variables = { email: d.email, password: d.password };
-    const { data, error } = await updateLogin(variables);
+    const result = await updateLogin({ variables: variables });
     if (error != undefined) {
       console.error('Oh no!', error.message);
+      throw Error(error.message);
     } else {
-      await localStorage.setItem('access_token', data.login.accessToken);
-      await localStorage.setItem('refresh_token', data.login.refreshToken);
+      await localStorage.setItem('access_token', result.data.login.accessToken);
+      await localStorage.setItem(
+        'refresh_token',
+        result.data.login.refreshToken
+      );
       navigate('/dashboard', {
         state: {
           title: 'Dashboard',
@@ -36,7 +41,6 @@ const LoginPage = () => {
         },
       });
     }
-    event.preventDefault();
     // Handle form submission logic
   };
 
