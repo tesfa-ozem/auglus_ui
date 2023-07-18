@@ -19,7 +19,12 @@ const ExpenseCard = styled('div')(() => ({
 }));
 
 const DashboardPage = () => {
-  const { loading, error, data } = useQuery(EXPENSE_TOTALS);
+  const { loading, error, data } = useQuery(EXPENSE_TOTALS, {
+    variables: {
+      frequency: 'monthly',
+      period: 2023,
+    },
+  });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Oh no... {error.message}</p>;

@@ -4,6 +4,7 @@ import { useMutation } from '@apollo/client';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { LOGIN } from '../../gql/mutations';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 type Inputs = {
   email: string;
@@ -11,6 +12,7 @@ type Inputs = {
 };
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { setIsAuthenticated, setAccessToken, setRefreshToken } = useAuth();
   const [updateLogin, { data, loading, error }] = useMutation(LOGIN);
   const {
     register,
@@ -22,18 +24,16 @@ const LoginPage = () => {
     d: Inputs,
     event: React.FormEvent<HTMLFormElement>
   ) => {
-    debugger;
     const variables = { email: d.email, password: d.password };
     const result = await updateLogin({ variables: variables });
     if (error != undefined) {
       console.error('Oh no!', error.message);
       throw Error(error.message);
     } else {
-      await localStorage.setItem('access_token', result.data.login.accessToken);
-      await localStorage.setItem(
-        'refresh_token',
-        result.data.login.refreshToken
-      );
+      debugger;
+      setAccessToken(result.data.login.accessToken);
+      setRefreshToken(result.data.login.refreshToken);
+      setIsAuthenticated(true);
       navigate('/dashboard', {
         state: {
           title: 'Dashboard',

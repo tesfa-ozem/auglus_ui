@@ -20,16 +20,19 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { GraphQLError } from 'graphql';
+import dotenv from 'dotenv';
 
 const container = document.getElementById('root') as HTMLElement;
 const root = ReactDOM.createRoot(container);
+// dotenv.config();
 
 const httpLink = createHttpLink({
   uri: 'http://[::]:8000/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('access_token');
+  const token = localStorage.getItem('accessToken');
+
   return {
     headers: {
       ...headers,
@@ -39,9 +42,10 @@ const authLink = setContext((_, { headers }) => {
 });
 const errorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
+    debugger;
     if (graphQLErrors)
       for (let err of graphQLErrors) {
-        if (err.extensions.code == 'FORBIDDEN') {
+        if (err.extensions?.code == 'FORBIDDEN') {
           const observable = new Observable<FetchResult<Record<string, any>>>(
             (observer) => {
               (async () => {
@@ -61,7 +65,7 @@ const errorLink = onError(
 
                   forward(operation).subscribe(subscriber);
                 } catch (err) {
-                  // TODO: Redirect to logout screen
+                  localStorage.clear();
                   observer.error(err);
                 }
               })();
@@ -69,6 +73,9 @@ const errorLink = onError(
           );
           // if (networkError) console.log(`[Network error]: ${networkError}`);
           return observable;
+        } else {
+          // localStorage.clear()
+          if (networkError) console.log(`[Network error]: ${networkError}`);
         }
       }
   }
@@ -81,14 +88,14 @@ const client = new ApolloClient({
 
 const refreshToken = async () => {
   try {
-    const refresh_token = localStorage.getItem('refresh_token');
+    const refresh_token = localStorage.getItem('refreshToken');
     const refreshResolverResponse = await client.mutate({
       mutation: REFRESH,
-      variables: { refreshToken: refresh_token },
+      variables: { refreshToken: refresh_token ?? '' },
     });
 
     const accessToken = refreshResolverResponse.data?.refreshToken.accessToken;
-    localStorage.setItem('access_token', accessToken || '');
+    localStorage.setItem('accessToken', accessToken || '');
     return accessToken;
   } catch (err) {
     // TODO: Reirect to login screen
