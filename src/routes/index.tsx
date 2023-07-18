@@ -7,23 +7,30 @@ const Landing = lazy(() => import('./landing/Landing'));
 const LoginPage = lazy(() => import('./auth/Login'));
 const DashboardPage = lazy(() => import('./dashboard/Dashboard'));
 import ErrorPage from './error-page';
+import { AuthLayout } from '../layout/AuthLayout';
 
 export const router = createBrowserRouter([
   {
     path: '',
-    element: <BaseLayout />,
-    errorElement: <ErrorPage />,
+    element: <AuthLayout />,
     children: [
-      { index: true, element: <Navigate to="/landing" /> },
-      { path: 'landing', element: <Landing /> },
-      { path: 'login', element: <LoginPage /> },
+      {
+        path: '',
+        element: <BaseLayout />,
+        errorElement: <ErrorPage />,
+        children: [
+          { index: true, element: <Navigate to="/landing" /> },
+          { path: 'landing', element: <Landing /> },
+          { path: 'login', element: <LoginPage /> },
+        ],
+      },
+      {
+        path: '',
+        element: <AppLayout />,
+        errorElement: <ErrorPage />,
+        children: [{ path: 'dashboard', element: <DashboardPage /> }],
+      },
     ],
-  },
-  {
-    path: '',
-    element: <AppLayout />,
-    errorElement: <ErrorPage />,
-    children: [{ path: 'dashboard', element: <DashboardPage /> }],
   },
 ]);
 

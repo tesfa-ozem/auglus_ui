@@ -1,14 +1,14 @@
-import { gql } from 'urql';
+import { gql } from '@apollo/client';
 
 const EXPENSE_TOTALS = gql`
-query(){
-    expenseTotals(frequency:"monthly",period:2022){
-          data{
-              Id
-              totalPaidIn
-              totalPaidOut
-          }
+  query ($frequency: String!, $period: Int!) {
+    expenseTotals(frequency: $frequency, period: $period) {
+      data {
+        Id
+        totalPaidIn
+        totalPaidOut
       }
+    }
   }
 `;
 
