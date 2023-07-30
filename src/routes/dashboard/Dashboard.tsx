@@ -1,16 +1,13 @@
 import { Box, Container, Typography, Grid } from '@mui/material';
 import { styled } from '@mui/system';
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
-import { useQuery } from '@apollo/client';
-import { EXPENSE_TOTALS } from '../../gql/queries';
+  KanbanComponent,
+  ColumnsDirective,
+  ColumnDirective,
+} from '@syncfusion/ej2-react-kanban';
+import axiosInstance from '../../common/http';
+import { useEffect, useState } from 'react';
+import KanbanCard from '../../layout/components/KanbanCard';
 
 const ExpenseCard = styled('div')(() => ({
   backgroundColor: 'white',
@@ -19,54 +16,79 @@ const ExpenseCard = styled('div')(() => ({
 }));
 
 const DashboardPage = () => {
-  const { loading, error, data } = useQuery(EXPENSE_TOTALS, {
-    variables: {
-      frequency: 'monthly',
-      period: 2023,
-    },
-  });
+  const [tasks, setTasks] = useState([]);
+  const [kanbanData, setKanbanDat] = useState();
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Oh no... {error.message}</p>;
+  const getTasks = async () => {
+    try {
+      const response = await axiosInstance.get('/task/userTasks');
+      let response_data = response.data;
+      setTasks(response_data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const flatenData = () => {
+    let data = tasks.map((task) => ({
+      id: task.id,
+      key: task.task.status,
+      title: task.task.name,
+      priority: task.task.priority,
+    }));
+    return data;
+  };
+
+  useEffect(() => {
+    getTasks();
+  }, []);
+
+  useEffect(() => {
+    setKanbanDat(flatenData());
+  }, [tasks]);
+
   return (
     <Box
       sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
         minHeight: '100vh',
       }}
     >
       <Container maxWidth="lg">
-        <Typography variant="h4" component="h1" align="center" gutterBottom>
+        {/* <Typography variant="h4" component="h1" align="center" gutterBottom>
           Expense Tracker Dashboard
-        </Typography>
+        </Typography> */}
 
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={12} lg={8}>
-            <ExpenseCard>
-              <Typography variant="h6" component="h2" gutterBottom>
-                Monthly Expense Trends
-              </Typography>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={data.expenseTotals.data}>
-                  <XAxis dataKey="Id" />
-                  <YAxis />
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <Tooltip />
-                  <Line
-                    type="monotone"
-                    dataKey="totalPaidIn"
-                    stroke="#8884d8"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="totalPaidOut"
-                    stroke="#82ca9d"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </ExpenseCard>
+        <Grid container alignItems="flex-start">
+          <Grid item xs={12} md={12} lg={12}>
+           
+            <KanbanComponent
+              id="id" 
+              keyField="key"
+              dataSource={kanbanData}
+              cardSettings={{
+                headerField: 'Title',
+                template: KanbanCard.bind(this),
+                // selectionType: 'Multiple',
+              }}
+            >
+              <ColumnsDirective>
+                <ColumnDirective
+                  headerText="Assigned"
+                  keyField="Assigned"
+                  template={KanbanCard.bind(this)}
+                />
+                <ColumnDirective
+                  headerText="In Progress"
+                  keyField="InProgress"
+                  template={KanbanCard.bind(this)}
+                />
+                <ColumnDirective
+                  headerText="Completed"
+                  keyField="Close"
+                  template={KanbanCard.bind(this)}
+                />
+              </ColumnsDirective>
+            </KanbanComponent>
+           
           </Grid>
         </Grid>
       </Container>

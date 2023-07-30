@@ -1,10 +1,9 @@
 import { Box, Container, TextField, Typography, Button } from '@mui/material';
 import { styled } from '@mui/system';
-import { useMutation } from '@apollo/client';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { LOGIN } from '../../gql/mutations';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import axiosInstance from '../../common/http';
 
 type Inputs = {
   email: string;
@@ -13,7 +12,7 @@ type Inputs = {
 const LoginPage = () => {
   const navigate = useNavigate();
   const { setIsAuthenticated, setAccessToken, setRefreshToken } = useAuth();
-  const [updateLogin, { data, loading, error }] = useMutation(LOGIN);
+
   const {
     register,
     handleSubmit,
@@ -24,15 +23,12 @@ const LoginPage = () => {
     d: Inputs,
     event: React.FormEvent<HTMLFormElement>
   ) => {
-    const variables = { email: d.email, password: d.password };
-    const result = await updateLogin({ variables: variables });
-    if (error != undefined) {
-      console.error('Oh no!', error.message);
-      throw Error(error.message);
-    } else {
-      debugger;
-      setAccessToken(result.data.login.accessToken);
-      setRefreshToken(result.data.login.refreshToken);
+    try {
+      const variables = { email: d.email, password: d.password };
+      const response = await axiosInstance.post('/api/v1/users/login', variables);
+
+      setAccessToken(response.data.token);
+      setRefreshToken(response.data.refresh_token);
       setIsAuthenticated(true);
       navigate('/dashboard', {
         state: {
@@ -40,8 +36,9 @@ const LoginPage = () => {
           url: '/dashboard',
         },
       });
+    } catch (e) {
+      console.log(e)
     }
-    // Handle form submission logic
   };
 
   const LoginForm = styled('form')(() => ({

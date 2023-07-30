@@ -15,7 +15,6 @@
     }
   },
   "dependencies": {
-    "@apollo/client": "^3.7.17",
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
     "@fontsource/montserrat-alternates": "^5.0.3",
@@ -23,12 +22,24 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.5",
     "@mui/system": "latest",
+    "@syncfusion/ej2-base": "^22.2.5",
+    "@syncfusion/ej2-buttons": "^22.2.5",
+    "@syncfusion/ej2-data": "^22.2.5",
+    "@syncfusion/ej2-inputs": "^22.2.5",
+    "@syncfusion/ej2-kanban": "^22.2.5",
+    "@syncfusion/ej2-layouts": "^22.2.5",
+    "@syncfusion/ej2-lists": "^22.2.5",
+    "@syncfusion/ej2-navigations": "^22.2.5",
+    "@syncfusion/ej2-popups": "^22.2.5",
+    "@syncfusion/ej2-react-kanban": "^22.2.5",
+    "@syncfusion/ej2-splitbuttons": "^22.2.5",
+    "axios": "^1.4.0",
     "dotenv": "^16.3.1",
-    "graphql": "^16.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.1",
     "react-router-dom": "^6.13.0",
+    "react-scripts": "3.4.3",
     "recharts": "^2.7.1"
   },
   "devDependencies": {

@@ -7,12 +7,12 @@ export const light: PaletteOptions = {
     mode: 'light',
 
     primary: {
-        main: '#fa5d00',
+        main: '#28282a',
     },
 
-    background: {
-        default: '#FEF8F3',
-    },
+    // background: {
+    //     default: '#FEF8F3',
+    // },
 
     example: {
         primary: '#49b4ff',
