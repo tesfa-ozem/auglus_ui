@@ -9,13 +9,17 @@ import {
   StepLabel,
   Stepper,
   Grid,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from '@mui/material';
 import { styled } from '@mui/system';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import axiosInstance from '../../common/http';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Inputs = {
   email: string;
@@ -35,6 +39,9 @@ const SignUpPage = () => {
   const navigate = useNavigate();
   const { setIsAuthenticated, setAccessToken, setRefreshToken } = useAuth();
   const [userId,setUserId] = useState(null)
+  const [skills, setSkills] = useState<any[]>([]);
+  const [selectedSkills, setSelectedSkill] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   const {
     control,
     register,
@@ -81,6 +88,23 @@ const SignUpPage = () => {
     } catch (e) {}
       navigate('/login');
   };
+
+  const getSkills = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get('/skill');
+      let response_data = response.data;
+      setSkills(response_data);
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      console.log(e);
+    }
+  };
+
+  useEffect(()=>{
+    getSkills()
+  })
 
   return (
     <Box
@@ -173,19 +197,31 @@ const SignUpPage = () => {
                       />
                     </Grid>
                     <Grid item xs={12}>
+                    <FormControl fullWidth>
+                      <InputLabel id="skills-label">Skills</InputLabel>
                       <Controller
                         name="skills"
                         control={control}
+                        defaultValue={[]}
                         render={({ field }) => (
-                          <TextField
+                          <Select
                             {...field}
-                            label="Skills (comma-separated)"
-                            multiline
-                            rows={3}
-                            fullWidth
-                          />
+                            labelId="skills-label"
+                            multiple
+                            value={field.value}
+                            onChange={(event) =>
+                              field.onChange(event.target.value)
+                            }
+                          >
+                            {skills.map((skill) => (
+                              <MenuItem key={skill.id} value={skill.id}>
+                                {skill.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
                         )}
                       />
+                    </FormControl>
                     </Grid>
                     <Grid item xs={12}>
                       <Button type="submit" variant="contained" color="primary">
