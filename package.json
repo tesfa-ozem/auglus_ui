@@ -35,6 +35,7 @@
     "@syncfusion/ej2-splitbuttons": "^22.2.5",
     "axios": "^1.4.0",
     "dotenv": "^16.3.1",
+    "kanban-board-react": "^1.0.42",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.1",
