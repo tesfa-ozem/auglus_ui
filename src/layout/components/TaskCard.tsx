@@ -40,10 +40,10 @@ const TaskCard = ({ taskId,title, priority, status, assignee, startTask, endTask
           {assignee&&<Typography variant="h5" component="div">{assignee}</Typography>}
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-          <Button variant="contained" disabled={status!="New"} color="success" onClick={()=>startTask(taskId)}>
+          <Button variant="contained" disabled={status!="Assigned"} color="success" onClick={()=>startTask(taskId)}>
             Start
           </Button>
-          <Button variant="contained" disabled={status=="Completed"} color="error" onClick={()=>endTask(taskId)}>
+          <Button variant="contained" disabled={status!="In progess"} color="error" onClick={()=>endTask(taskId)}>
             End
           </Button>
         </Box>

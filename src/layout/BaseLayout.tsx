@@ -10,6 +10,7 @@ const BaseLayout: React.FC = () => {
   }
   return (
     <>
+    
       <GlobalStyles
         styles={{
           '#root': {

@@ -2,6 +2,7 @@ import { GlobalStyles } from '@mui/material';
 import * as React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import AppToolbar from './components/AppToolbar';
 
 const AppLayout: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -10,6 +11,7 @@ const AppLayout: React.FC = () => {
   }
   return (
     <>
+    
       <GlobalStyles
         styles={{
           '#root': {
@@ -19,7 +21,7 @@ const AppLayout: React.FC = () => {
           },
         }}
       />
-      {/*<Toolbar />*/}
+      <AppToolbar/>
       <React.Suspense>
         <Outlet />
       </React.Suspense>

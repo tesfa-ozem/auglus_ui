@@ -3,7 +3,6 @@ import {
   Container,
   Typography,
   Button,
-  Paper,
   AppBar,
   Toolbar,
 } from '@mui/material';
@@ -14,10 +13,6 @@ import { Link as NavLink } from '../../common/Link.js';
 import Logo from '/logo.svg';
 import Grid from '@mui/material/Grid';
 import Rating from '@mui/material/Rating';
-import InputLabel from '@mui/material/InputLabel';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
-import { OutlinedInputProps } from '@mui/material/OutlinedInput';
 import InputBase from '@mui/material/InputBase';
 import CustomizedAccordion from '../../layout/components/Accordion';
 

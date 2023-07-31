@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import axiosInstance from '../../common/http';
+import jwtDecode from 'jwt-decode';
 
 type Inputs = {
   email: string;
@@ -11,7 +12,13 @@ type Inputs = {
 };
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { setIsAuthenticated, setAccessToken, setRefreshToken } = useAuth();
+  const {
+    setIsAuthenticated,
+    setAccessToken,
+    setRefreshToken,
+    setIsAdmin,
+    setUserId,
+  } = useAuth();
 
   const {
     register,
@@ -25,11 +32,20 @@ const LoginPage = () => {
   ) => {
     try {
       const variables = { email: d.email, password: d.password };
-      const response = await axiosInstance.post('/api/v1/users/login', variables);
+      const response = await axiosInstance.post(
+        '/api/v1/users/login',
+        variables
+      );
 
       setAccessToken(response.data.token);
       setRefreshToken(response.data.refresh_token);
+      const decodedToken: any = jwtDecode(response.data.token);
+      setIsAdmin(decodedToken.is_admin);
+      setUserId(decodedToken.user_id);
       setIsAuthenticated(true);
+
+      // Output the decoded token
+      console.log(decodedToken);
       navigate('/dashboard', {
         state: {
           title: 'Dashboard',
@@ -37,7 +53,7 @@ const LoginPage = () => {
         },
       });
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
   };
 
@@ -102,6 +118,7 @@ const LoginPage = () => {
             >
               Login
             </SubmitButton>
+            <Button onClick={() => navigate('/signUp')}>Sign Up</Button>
           </LoginForm>
         </Box>
       </Container>

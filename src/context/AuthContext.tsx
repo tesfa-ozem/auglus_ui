@@ -9,15 +9,21 @@ export const AuthProvider = ({ children }) => {
     'isAuthenticated',
     false
   );
+  const [isAdmin, setIsAdmin] = useLocalStorage('isAdmin', false)
   const [accessToken, setAccessToken] = useLocalStorage('accessToken', null);
   const [refreshToken, setRefreshToken] = useLocalStorage('refreshToken', null);
+  const [userId, setUserId] = useLocalStorage('user_id',null)
   const navigate = useNavigate();
+
 
   const logout = () => {
     setUser(null);
     setAccessToken(null);
     setRefreshToken(null);
-    navigate('/', { replace: true });
+    setIsAdmin(null)
+    setUserId(null)
+    setIsAuthenticated(false)
+    navigate('/login', { replace: true });
   };
 
   const value = useMemo(
@@ -28,6 +34,10 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated,
       setAccessToken,
       setRefreshToken,
+      isAdmin,
+      setIsAdmin,
+      userId,
+      setUserId,
       logout,
     }),
     [user, isAuthenticated]

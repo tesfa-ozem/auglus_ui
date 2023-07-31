@@ -3,23 +3,24 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '../../common/http';
 import TaskCard from '../../layout/components/TaskCard';
 import {
-  Autocomplete,
-  TextField,
-  Button,
-  Container,
-  Grid,
   Select,
   MenuItem,
   FormControl,
   InputLabel,
+  Button,
+  Container,
+  Grid,
+  TextField,
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
+import { useAuth } from '../../context/AuthContext';
 
 const DashboardPage = () => {
+  const { isAdmin, userId } = useAuth();
   const [tasks, setTasks] = useState<any[]>([]);
-  const [skill, setSkill] = useState<any[]>([]);
+  const [skills, setSkills] = useState<any[]>([]);
+  const [selectedSkills, setSelectedSkill] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const existingSkills = ['React', 'JavaScript', 'HTML', 'CSS'];
 
   const {
     control,
@@ -29,6 +30,7 @@ const DashboardPage = () => {
 
   const onSubmit = (data) => {
     // Process form data or send it to the server
+    createTask(data);
     console.log(data);
   };
 
@@ -45,41 +47,66 @@ const DashboardPage = () => {
     }
   };
 
-  const startTask = async (taskId:number) => {
-    try{
+  const startTask = async (taskId: number) => {
+    try {
       setLoading(true);
       const response = await axiosInstance.patch(`/task/${taskId}/start`);
       getTasks();
       let response_data = response.data;
       setLoading(false);
-    } catch (e){
+    } catch (e) {
       setLoading(false);
       console.log(e);
     }
-  }
+  };
 
-  const endTask = async (taskId:number) => {
-    try{
+  const endTask = async (taskId: number) => {
+    try {
       setLoading(true);
       const response = await axiosInstance.patch(`/task/${taskId}/end`);
       getTasks();
       let response_data = response.data;
       setLoading(false);
-    } catch (e){
+    } catch (e) {
       setLoading(false);
       console.log(e);
     }
-  }
-  
+  };
+
+  const getSkills = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get('/skill');
+      let response_data = response.data;
+      setSkills(response_data);
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      console.log(e);
+    }
+  };
+
+  const createTask = async (data) => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.post('/task', data);
+      let response_data = response.data;
+      getTasks();
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      console.log(e);
+    }
+  };
   useEffect(() => {
     getTasks();
+    getSkills();
   }, []);
-
 
   return (
     <>
       <Box>
-        <Grid container spacing={2} alignContent='baseline'>
+        <Grid container spacing={2} alignContent="baseline">
           <Grid item xs={3}>
             <Container maxWidth="sm">
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -89,7 +116,7 @@ const DashboardPage = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <Controller
-                      name="Name"
+                      name="name"
                       control={control}
                       defaultValue=""
                       rules={{ required: 'Task name is required' }}
@@ -97,7 +124,7 @@ const DashboardPage = () => {
                         <TextField
                           {...field}
                           fullWidth
-                          label="Name"
+                          label="Task Name"
                           error={Boolean(errors.name)}
                           helperText={errors.name && errors.name.message}
                         />
@@ -113,42 +140,40 @@ const DashboardPage = () => {
                         defaultValue=""
                         render={({ field }) => (
                           <Select {...field}>
-                            <MenuItem value={1}>Low</MenuItem>
-                            <MenuItem value={2}>Medium</MenuItem>
-                            <MenuItem value={3}>High</MenuItem>
+                            <MenuItem value={'Low'}>Low</MenuItem>
+                            <MenuItem value={'Medium'}>Medium</MenuItem>
+                            <MenuItem value={'High'}>High</MenuItem>
                           </Select>
                         )}
                       />
                     </FormControl>
                   </Grid>
                   <Grid item xs={12}>
-                    <Controller
-                      name="skills"
-                      control={control}
-                      defaultValue={[]}
-                      render={({ field }) => (
-                        <Autocomplete
-                          {...field}
-                          multiple
-                          freeSolo
-                          options={existingSkills}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              fullWidth
-                              label="Skills"
-                              error={Boolean(errors.skills)}
-                              helperText={
-                                errors.skills && 'Please select or add skills'
-                              }
-                            />
-                          )}
-                          isOptionEqualToValue={(option, value) =>
-                            option === value || existingSkills.includes(value)
-                          }
-                        />
-                      )}
-                    />
+                    <FormControl fullWidth>
+                      <InputLabel id="skills-label">Skills</InputLabel>
+                      <Controller
+                        name="skills"
+                        control={control}
+                        defaultValue={[]}
+                        render={({ field }) => (
+                          <Select
+                            {...field}
+                            labelId="skills-label"
+                            multiple
+                            value={field.value}
+                            onChange={(event) =>
+                              field.onChange(event.target.value)
+                            }
+                          >
+                            {skills.map((skill) => (
+                              <MenuItem key={skill.id} value={skill.id}>
+                                {skill.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        )}
+                      />
+                    </FormControl>
                   </Grid>
 
                   <Grid item xs={12}>
@@ -160,8 +185,8 @@ const DashboardPage = () => {
               </form>
             </Container>
           </Grid>
-          <Grid  xs={9} container spacing={2}>
-            {tasks!=undefined ? (
+          <Grid xs={9} container spacing={2}>
+            {tasks != undefined ? (
               tasks.map((task) => (
                 <Grid item xs={12} sm={6} md={4} key={task.id}>
                   <TaskCard
@@ -171,7 +196,7 @@ const DashboardPage = () => {
                     status={task.task.status}
                     assignee={task.professional.first_name}
                     startTask={startTask}
-                    endTask={endTask }
+                    endTask={endTask}
                   />
                 </Grid>
               ))
