@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { useAuth } from '../../context/AuthContext';
+import { margin } from '@mui/system';
 
 const DashboardPage = () => {
   const { isAdmin, userId } = useAuth();
@@ -106,8 +107,8 @@ const DashboardPage = () => {
   return (
     <>
       <Box>
-        <Grid container spacing={2} alignContent="baseline">
-          <Grid item xs={3}>
+        <Grid container spacing={2} sx={{margin:'0'}} >
+          {/* <Grid item xs={3}>
             <Container maxWidth="sm">
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container spacing={2}>
@@ -184,16 +185,16 @@ const DashboardPage = () => {
                 </Grid>
               </form>
             </Container>
-          </Grid>
-          <Grid xs={9} container spacing={2}>
+          </Grid> */}
+          <Grid xs={12} container spacing={2}>
             {tasks != undefined ? (
               tasks.map((task) => (
                 <Grid item xs={12} sm={6} md={4} key={task.id}>
                   <TaskCard
                     taskId={task.id}
-                    title={task.task.name}
-                    priority={task.task.priority}
-                    status={task.task.status}
+                    title={task.task?.name??""}
+                    priority={task.task?.priority??""}
+                    status={task.task?.status??""}
                     assignee={task.professional.first_name}
                     startTask={startTask}
                     endTask={endTask}

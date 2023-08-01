@@ -36,9 +36,9 @@ const AppToolbar = () => {
         <Typography variant="h6" style={{ flexGrow: 1 }}>
           Your Logo
         </Typography>
-        <Button color="inherit">Home</Button>
-        <Button color="inherit">About</Button>
-        <Button color="inherit">Contact</Button>
+        <Button color="inherit">Dashboard</Button>
+        <Button color="inherit">Tasks</Button>
+        <Button color="inherit">Professionals</Button>
         {/* Profile Button */}
         <IconButton color="inherit" onClick={handleProfileMenuOpen}>
           <Avatar alt={user.name} src={user.avatarUrl} />

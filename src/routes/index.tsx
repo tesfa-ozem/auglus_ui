@@ -21,8 +21,7 @@ export const router = createBrowserRouter([
         element: <BaseLayout />,
         errorElement: <ErrorPage />,
         children: [
-          { index: true, element: <Navigate to="/landing" /> },
-          { path: 'landing', element: <Landing /> },
+          { index: true, element: <Navigate to="/login" /> },
           { path: 'login', element: <LoginPage /> },
           { path: 'signUp', element: <SignUp /> },
         ],

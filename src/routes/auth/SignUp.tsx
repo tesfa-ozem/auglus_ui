@@ -68,13 +68,15 @@ const SignUpPage = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(0);
   const [selectedOption, setSelectedOption] = useState('');
   const [newItem, setNewItem] = useState('');
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 0);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
+
+  
 
   const createUser = async (d: Inputs) => {
     try {
@@ -137,7 +139,7 @@ const SignUpPage = () => {
 
   useEffect(() => {
     getSkills();
-  });
+  },[]);
 
   return (
     <Box

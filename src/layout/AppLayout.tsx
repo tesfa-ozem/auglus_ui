@@ -11,7 +11,7 @@ const AppLayout: React.FC = () => {
   }
   return (
     <>
-    
+    <AppToolbar/>
       <GlobalStyles
         styles={{
           '#root': {
@@ -21,7 +21,7 @@ const AppLayout: React.FC = () => {
           },
         }}
       />
-      <AppToolbar/>
+      
       <React.Suspense>
         <Outlet />
       </React.Suspense>

@@ -43,7 +43,7 @@ const TaskCard = ({ taskId,title, priority, status, assignee, startTask, endTask
           <Button variant="contained" disabled={status!="Assigned"} color="success" onClick={()=>startTask(taskId)}>
             Start
           </Button>
-          <Button variant="contained" disabled={status!="In progess"} color="error" onClick={()=>endTask(taskId)}>
+          <Button variant="contained" disabled={status!="In Progress"} color="error" onClick={()=>endTask(taskId)}>
             End
           </Button>
         </Box>
