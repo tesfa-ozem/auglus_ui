@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
     'isAuthenticated',
     false
   );
+  const [activeStep, setActiveStep] = useLocalStorage("activeStep",0);
   const [isAdmin, setIsAdmin] = useLocalStorage('isAdmin', false)
   const [accessToken, setAccessToken] = useLocalStorage('accessToken', null);
   const [refreshToken, setRefreshToken] = useLocalStorage('refreshToken', null);
@@ -39,6 +40,8 @@ export const AuthProvider = ({ children }) => {
       userId,
       setUserId,
       logout,
+      activeStep, 
+      setActiveStep
     }),
     [user, isAuthenticated]
   );

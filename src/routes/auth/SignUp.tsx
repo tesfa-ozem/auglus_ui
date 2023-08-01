@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import axiosInstance from '../../common/http';
 import { useEffect, useState } from 'react';
+import Alert from '@mui/material/Alert';
 
 type Inputs = {
   email: string;
@@ -37,14 +38,16 @@ const SubmitButton = styled(Button)(() => ({
 }));
 const SignUpPage = () => {
   const navigate = useNavigate();
-  const { setIsAuthenticated, setAccessToken, setRefreshToken } = useAuth();
+  const [activeStep, setActiveStep] = useState(0);
   const [userId, setUserId] = useState(null);
   const [skills, setSkills] = useState<any[]>([]);
   const [selectedSkills, setSelectedSkill] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [newSkill, setNewSkill] = useState('');
   const [isAddingNewSkill, setIsAddingNewSkill] = useState(false);
-
+  const [selectedOption, setSelectedOption] = useState('');
+  const [newItem, setNewItem] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const handleChange = (event) => {
     const value = event.target.value;
     setSelectedSkill(value);
@@ -68,16 +71,6 @@ const SignUpPage = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const [activeStep, setActiveStep] = useState(0);
-  const [selectedOption, setSelectedOption] = useState('');
-  const [newItem, setNewItem] = useState('');
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  
-
   const createUser = async (d: Inputs) => {
     try {
       const variables = {
@@ -88,24 +81,31 @@ const SignUpPage = () => {
       const response = await axiosInstance.post('/api/v1/users', variables);
 
       setUserId(response.data.id);
-      handleNext();
-    } catch (e) {
-      console.log(e);
+      setActiveStep(1);
+    } catch (e: AxiosError) {
+      setErrorMessage(`${e.response.statusText} - ${e.response.data.message}`);
+      setActiveStep(1);
     }
   };
+
   const onSubmit = async (data) => {
     // Handle form submission, e.g., update user data in the backend
+
     console.log(data);
     try {
       const variables = {
         first_name: data.first_name,
         last_name: data.last_name,
         user_id: userId,
-        skill_ids: [],
+        skill_ids: data.skills,
       };
       const response = await axiosInstance.post('/professional', variables);
-    } catch (e) {}
-    navigate('/login');
+      navigate('/login');
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setActiveStep(0);
+    }
   };
 
   const getSkills = async () => {
@@ -120,18 +120,18 @@ const SignUpPage = () => {
       console.log(e);
     }
   };
-  const handleAddNewItem = async() => {
+  const handleAddNewItem = async (event) => {
+    event.preventDefault();
     try {
-    if (newItem.trim() !== '') {
-      console.log('New item:', newItem);
-      let newSkills = newItem.split(',')
-      setLoading(true);
-      const response = await axiosInstance.post('/skill',newSkills);
-      setLoading(false);
-      setNewItem('');
-      getSkills()
-    }}
-    catch(e){
+      if (newItem.trim() !== '') {
+        let newSkills = newItem.split(',');
+        setLoading(true);
+        const response = await axiosInstance.post('/skill', newSkills);
+        setLoading(false);
+        setNewItem('');
+        getSkills();
+      }
+    } catch (e) {
       setLoading(false);
       console.log(e);
     }
@@ -139,7 +139,7 @@ const SignUpPage = () => {
 
   useEffect(() => {
     getSkills();
-  },[]);
+  }, []);
 
   return (
     <Box
@@ -162,6 +162,7 @@ const SignUpPage = () => {
           <Typography variant="h4" component="h1" align="center" gutterBottom>
             Sign Up
           </Typography>
+          {errorMessage && <Alert severity="warning">{errorMessage}</Alert>}
           <Stepper activeStep={activeStep} orientation="vertical">
             <Step>
               <StepLabel>Step 1: Account Information</StepLabel>

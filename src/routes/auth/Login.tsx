@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import axiosInstance from '../../common/http';
 import jwtDecode from 'jwt-decode';
+import { useState } from 'react';
+import Alert from '@mui/material/Alert';
+import { AxiosError } from 'axios';
 
 type Inputs = {
   email: string;
@@ -12,6 +15,7 @@ type Inputs = {
 };
 const LoginPage = () => {
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
   const {
     setIsAuthenticated,
     setAccessToken,
@@ -52,8 +56,11 @@ const LoginPage = () => {
           url: '/dashboard',
         },
       });
-    } catch (e) {
-      console.log(e);
+    } catch (e:AxiosError) {
+      if(e.response.status==404){
+        setErrorMessage(e.response.statusText)
+      }
+      
     }
   };
 
@@ -88,7 +95,7 @@ const LoginPage = () => {
           <Typography variant="h4" component="h1" align="center" gutterBottom>
             Login
           </Typography>
-
+          {errorMessage&&<Alert severity="warning">{errorMessage}</Alert>}
           <LoginForm onSubmit={handleSubmit(onSubmit)}>
             <TextField
               id="email"
