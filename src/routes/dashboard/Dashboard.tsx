@@ -3,21 +3,11 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '../../common/http';
 import TaskCard from '../../layout/components/TaskCard';
 import {
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Button,
-  Container,
   Grid,
-  TextField,
 } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
-import { useAuth } from '../../context/AuthContext';
-import { margin } from '@mui/system';
+import { useForm } from 'react-hook-form';
 
 const DashboardPage = () => {
-  const { isAdmin, userId } = useAuth();
   const [tasks, setTasks] = useState<any[]>([]);
   const [skills, setSkills] = useState<any[]>([]);
   const [selectedSkills, setSelectedSkill] = useState<any[]>([]);
@@ -29,7 +19,7 @@ const DashboardPage = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = (data:any) => {
     // Process form data or send it to the server
     createTask(data);
     console.log(data);
@@ -87,7 +77,7 @@ const DashboardPage = () => {
     }
   };
 
-  const createTask = async (data) => {
+  const createTask = async (data:any) => {
     try {
       setLoading(true);
       const response = await axiosInstance.post('/task', data);
@@ -107,7 +97,7 @@ const DashboardPage = () => {
   return (
     <>
       <Box>
-        <Grid container spacing={2} sx={{margin:'0'}} >
+        <Grid container spacing={2} sx={{ margin: '0' }}>
           {/* <Grid item xs={3}>
             <Container maxWidth="sm">
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -192,9 +182,9 @@ const DashboardPage = () => {
                 <Grid item xs={12} sm={6} md={4} key={task.id}>
                   <TaskCard
                     taskId={task.id}
-                    title={task.task?.name??""}
-                    priority={task.task?.priority??""}
-                    status={task.task?.status??""}
+                    title={task.task?.name ?? ''}
+                    priority={task.task?.priority ?? ''}
+                    status={task.task?.status ?? ''}
                     assignee={task.professional.first_name}
                     startTask={startTask}
                     endTask={endTask}
