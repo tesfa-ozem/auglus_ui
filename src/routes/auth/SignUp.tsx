@@ -69,13 +69,11 @@ const SignUpPage = () => {
   } = useForm<Inputs>();
 
   const [activeStep, setActiveStep] = useState(1);
+  const [selectedOption, setSelectedOption] = useState('');
+  const [newItem, setNewItem] = useState('');
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 0);
   };
 
   const createUser = async (d: Inputs) => {
@@ -116,6 +114,22 @@ const SignUpPage = () => {
       setSkills(response_data);
       setLoading(false);
     } catch (e) {
+      setLoading(false);
+      console.log(e);
+    }
+  };
+  const handleAddNewItem = async() => {
+    try {
+    if (newItem.trim() !== '') {
+      console.log('New item:', newItem);
+      let newSkills = newItem.split(',')
+      setLoading(true);
+      const response = await axiosInstance.post('/skill',newSkills);
+      setLoading(false);
+      setNewItem('');
+      getSkills()
+    }}
+    catch(e){
       setLoading(false);
       console.log(e);
     }
@@ -237,28 +251,22 @@ const SignUpPage = () => {
                                   {skill.name}
                                 </MenuItem>
                               ))}
-                              <MenuItem>
-                                <Button
-                                  variant="contained"
-                                  onClick={handleAddSkill}
-                                >
-                                  Add Skill
-                                </Button>
-                              </MenuItem>
-                              {isAddingNewSkill && (
-                                <MenuItem>
-                                  <TextField
-                                    label="New Skill"
-                                    
-                                    
-                                  />
-                                  <Button variant="contained">Add</Button>
-                                </MenuItem>
-                              )}
                             </Select>
                           )}
                         />
                       </FormControl>
+
+                      {selectedOption === '' && (
+                        <TextField
+                          label="Add new skills"
+                          value={newItem}
+                          onChange={(e) => setNewItem(e.target.value)}
+                          fullWidth
+                        />
+                      )}
+                      {selectedOption === '' && (
+                        <button onClick={handleAddNewItem}>Add</button>
+                      )}
                     </Grid>
                     <Grid item xs={12}>
                       <Button type="submit" variant="contained" color="primary">
