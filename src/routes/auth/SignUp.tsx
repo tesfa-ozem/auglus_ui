@@ -38,10 +38,29 @@ const SubmitButton = styled(Button)(() => ({
 const SignUpPage = () => {
   const navigate = useNavigate();
   const { setIsAuthenticated, setAccessToken, setRefreshToken } = useAuth();
-  const [userId,setUserId] = useState(null)
+  const [userId, setUserId] = useState(null);
   const [skills, setSkills] = useState<any[]>([]);
   const [selectedSkills, setSelectedSkill] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [newSkill, setNewSkill] = useState('');
+  const [isAddingNewSkill, setIsAddingNewSkill] = useState(false);
+
+  const handleChange = (event) => {
+    const value = event.target.value;
+    setSelectedSkill(value);
+  };
+
+  const handleAddSkill = () => {
+    setIsAddingNewSkill(true);
+  };
+
+  const handleNewSkillInputChange = (event) => {
+    const value = event.target.value;
+    setNewSkill(value);
+
+    // Enable "Add New Skill" button if the new skill input is not empty
+    setIsAddingNewSkill(value.trim().length > 0);
+  };
   const {
     control,
     register,
@@ -49,7 +68,7 @@ const SignUpPage = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(1);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -68,7 +87,7 @@ const SignUpPage = () => {
       };
       const response = await axiosInstance.post('/api/v1/users', variables);
 
-      setUserId(response.data.id)
+      setUserId(response.data.id);
       handleNext();
     } catch (e) {
       console.log(e);
@@ -86,7 +105,7 @@ const SignUpPage = () => {
       };
       const response = await axiosInstance.post('/professional', variables);
     } catch (e) {}
-      navigate('/login');
+    navigate('/login');
   };
 
   const getSkills = async () => {
@@ -102,9 +121,9 @@ const SignUpPage = () => {
     }
   };
 
-  useEffect(()=>{
-    getSkills()
-  })
+  useEffect(() => {
+    getSkills();
+  });
 
   return (
     <Box
@@ -129,10 +148,10 @@ const SignUpPage = () => {
           </Typography>
           <Stepper activeStep={activeStep} orientation="vertical">
             <Step>
-              <StepLabel>Step 1: Personal Information</StepLabel>
+              <StepLabel>Step 1: Account Information</StepLabel>
               <StepContent>
                 <SignUpForm onSubmit={handleSubmit(createUser)}>
-                <TextField
+                  <TextField
                     id="email"
                     label="Email"
                     variant="outlined"
@@ -197,31 +216,49 @@ const SignUpPage = () => {
                       />
                     </Grid>
                     <Grid item xs={12}>
-                    <FormControl fullWidth>
-                      <InputLabel id="skills-label">Skills</InputLabel>
-                      <Controller
-                        name="skills"
-                        control={control}
-                        defaultValue={[]}
-                        render={({ field }) => (
-                          <Select
-                            {...field}
-                            labelId="skills-label"
-                            multiple
-                            value={field.value}
-                            onChange={(event) =>
-                              field.onChange(event.target.value)
-                            }
-                          >
-                            {skills.map((skill) => (
-                              <MenuItem key={skill.id} value={skill.id}>
-                                {skill.name}
+                      <FormControl fullWidth>
+                        <InputLabel id="skills-label">Skills</InputLabel>
+                        <Controller
+                          name="skills"
+                          control={control}
+                          defaultValue={[]}
+                          render={({ field }) => (
+                            <Select
+                              {...field}
+                              labelId="skills-label"
+                              multiple
+                              value={field.value}
+                              onChange={(event) =>
+                                field.onChange(event.target.value)
+                              }
+                            >
+                              {skills.map((skill) => (
+                                <MenuItem key={skill.id} value={skill.id}>
+                                  {skill.name}
+                                </MenuItem>
+                              ))}
+                              <MenuItem>
+                                <Button
+                                  variant="contained"
+                                  onClick={handleAddSkill}
+                                >
+                                  Add Skill
+                                </Button>
                               </MenuItem>
-                            ))}
-                          </Select>
-                        )}
-                      />
-                    </FormControl>
+                              {isAddingNewSkill && (
+                                <MenuItem>
+                                  <TextField
+                                    label="New Skill"
+                                    
+                                    
+                                  />
+                                  <Button variant="contained">Add</Button>
+                                </MenuItem>
+                              )}
+                            </Select>
+                          )}
+                        />
+                      </FormControl>
                     </Grid>
                     <Grid item xs={12}>
                       <Button type="submit" variant="contained" color="primary">
